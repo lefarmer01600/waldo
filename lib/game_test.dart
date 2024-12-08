@@ -1,6 +1,7 @@
 import 'dart:convert'; // Pour décoder le JSON
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'dart:async'; //Pour le timer
 
 void main() => runApp(const MyApp());
 
@@ -57,13 +58,16 @@ class ImageSection extends StatefulWidget {
 
 class _ImageSectionState extends State<ImageSection> {
   List jsonList = [];
-
+  int _score = 0;
   int gameNumber = 0;
+  late Timer _timer;
+  int _elapsedSeconds = 0;
 
   @override
   void initState() {
     super.initState();
     _loadJsonData();
+    _startTimer();
   }
 
   Future<void> _loadJsonData() async {
@@ -74,6 +78,59 @@ class _ImageSectionState extends State<ImageSection> {
         jsonList = jsonData;
       });
 
+  }
+    void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _elapsedSeconds++;
+      });
+    });
+  }
+
+  void _incrementScore(BuildContext context, String characterName) {
+    setState(() {
+      _score++;
+    });
+
+    _showMessage(context, '$characterName trouvé !');
+
+    // Tous trouvé
+    if (_score == 3) {
+      _timer.cancel(); 
+      final minutes = (_elapsedSeconds ~/ 60).toString().padLeft(2, '0');
+      final seconds = (_elapsedSeconds % 60).toString().padLeft(2, '0');
+      String time = '$minutes:$seconds';
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          int adjustedScore;
+          if (_elapsedSeconds <= 30) {
+            adjustedScore = 3;
+          } else if (_elapsedSeconds <= 90) {
+            adjustedScore = 2;
+          } else {
+            adjustedScore = 1;
+          }
+          return AlertDialog(
+            title: const Text('Bravo ! 🎉'),
+            content: Text('Vous avez trouvé tous les personnages en $time ! \n' 'Votre score final est : $adjustedScore/3'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const MyApp()),
+                  ); // Redémarrer le jeu
+                },
+                child: const Text('Recommencer'),
+                // child: const Text('Prochain niveau') 
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -93,7 +150,7 @@ class _ImageSectionState extends State<ImageSection> {
             
             jsonList[gameNumber]["perso"].forEach((element) {
               if (_checkIfFound(element["coords"], offset)) {
-                _showMessage(context, element["name"]);
+                _incrementScore(context, element["name"]);
               }
             });
 
