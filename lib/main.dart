@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+// import 'gameex.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -65,10 +67,19 @@ class ItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: SizedBox(
-        
-        child: Center(child: Text(text)),
+    return 
+    GestureDetector(
+      onTap: () {
+        print('Item $text clicked');
+        // Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => const Game1()),
+        //     );
+      },
+      child: Card(
+        child: SizedBox(
+          child: Center(child: Text(text)),
+        ),
       ),
     );
   }

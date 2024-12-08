@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Partie 1",
+        "image": "level-1.jpg",
+        "perso": [
+            {
+                "name": "Charlie",
+                "image": "waldo.png",
+                "coords": {
+                    "x": 540,
+                    "y": 500
+                }
+            },
+            {
+                "name": "Odlaw",
+                "image": "odlaw.png",
+                "coords": {
+                    "x": 150,
+                    "y": 500
+                }
+            },
+            {
+                "name": "Sorcier",
+                "image": "wizard.png",
+                "coords": {
+                    "x": 665,
+                    "y": 500
+                }
+            }
+        ]
+    }
+]
