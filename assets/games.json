@@ -1,31 +1,49 @@
 [
     {
-        "name": "Partie 1",
+        "name": "Niveau 1",
         "image": "level-1.jpg",
         "perso": [
             {
                 "name": "Charlie",
-                "image": "waldo.png",
+                "image": "waldo.jpg",
                 "coords": {
                     "x": 540,
-                    "y": 500
-                }
+                    "y": 385
+                },
+                "found": false
             },
             {
                 "name": "Odlaw",
-                "image": "odlaw.png",
+                "image": "odlaw.jpg",
                 "coords": {
-                    "x": 150,
-                    "y": 500
-                }
+                    "x": 245,
+                    "y": 390
+                },
+                "found": false
             },
             {
                 "name": "Sorcier",
-                "image": "wizard.png",
+                "image": "wizard.jpg",
                 "coords": {
                     "x": 665,
-                    "y": 500
-                }
+                    "y": 380
+                },
+                "found": false
+            }
+        ]
+    },
+    {
+        "name": "Niveau 2",
+        "image": "level-2.jpg",
+        "perso": [
+            {
+                "name": "Charlie",
+                "image": "waldo.jpg",
+                "coords": {
+                    "x": 1559,
+                    "y": 405
+                },
+                "found": false
             }
         ]
     }
