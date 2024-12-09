@@ -46,5 +46,137 @@
                 "found": false
             }
         ]
+    },
+    {
+        "name": "Niveau 3",
+        "image": "level-3.jpg",
+        "perso": [
+            {
+                "name": "Charlie",
+                "image": "waldo.jpg",
+                "coords": {
+                    "x": 1922,
+                    "y": 79
+                },
+                "found": false
+            },
+            {
+                "name": "Odlaw",
+                "image": "odlaw.jpg",
+                "coords": {
+                    "x": 1836,
+                    "y": 756
+                },
+                "found": false
+            },
+            {
+                "name": "Sorcier",
+                "image": "wizard.jpg",
+                "coords": {
+                    "x": 590,
+                    "y": 543 
+                },
+                "found": false
+            },
+            {
+                "name": "Wenda",
+                "image": "wenda.jpg",
+                "coords": {
+                    "x": 562,
+                    "y": 849
+                },
+                "found": false
+            }
+        ]
+    },
+    {
+        "name": "Niveau 4",
+        "image": "level-4.jpg",
+        "perso": [
+            {
+                "name": "Charlie",
+                "image": "waldo.jpg",
+                "coords": {
+                    "x": 1279,
+                    "y": 95
+                },
+                "found": false
+            },
+            {
+                "name": "Odlaw",
+                "image": "odlaw.jpg",
+                "coords": {
+                    "x": 80,
+                    "y": 758
+                },
+                "found": false
+            },
+            {
+                "name": "Wenda",
+                "image": "wenda.jpg",
+                "coords": {
+                    "x": 1407,
+                    "y": 291
+                },
+                "found": false
+            }
+        ]
+    },
+    {
+        "name": "Niveau 5",
+        "image": "level-5.jpg",
+        "perso": [
+            {
+                "name": "Charlie",
+                "image": "waldo.jpg",
+                "coords": {
+                    "x": 998,
+                    "y": 268
+                },
+                "found": false
+            },
+            {
+                "name": "Odlaw",
+                "image": "odlaw.jpg",
+                "coords": {
+                    "x": 536,
+                    "y": 1486
+                },
+                "found": false
+            },
+            {
+                "name": "Sorcier",
+                "image": "wizard.jpg",
+                "coords": {
+                    "x": 1256,
+                    "y": 2018 
+                },
+                "found": false
+            },
+            {
+                "name": "Wenda",
+                "image": "wenda.jpg",
+                "coords": {
+                    "x": 499,
+                    "y": 2214
+                },
+                "found": false
+            }
+        ]
+    },
+    {
+        "name": "Niveau 6",
+        "image": "level-6.jpg",
+        "perso": [
+            {
+                "name": "Charlie",
+                "image": "waldo.jpg",
+                "coords": {
+                    "x": 290,
+                    "y": 2015
+                },
+                "found": false
+            }
+        ]
     }
 ]

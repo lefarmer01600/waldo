@@ -56,9 +56,9 @@ class _CustomGridState extends State<CustomGrid> {
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('1. Règle 1'),
-                Text('2. Règle 2'),
-                Text('3. Règle 3'),
+                Text('1. Votre but est de trouver Charlie et ses camarades disperser dans différents monde.'),
+                Text('2. Plus vous prennez du temps à le/les trouver moins vous aurez de point.'),
+                Text('3. Saurez-vous retrouver Charlie et ammaser le plus de point ?'),
               ],
             ),
           ),
@@ -79,7 +79,7 @@ class _CustomGridState extends State<CustomGrid> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Custom Grid Example'),
+        title: const Text('Où est Charlie ?'),
       ),
       body: Column(
         children: [

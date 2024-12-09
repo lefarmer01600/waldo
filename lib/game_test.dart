@@ -35,6 +35,7 @@ class _ImageSectionState extends State<ImageSection> {
   int _score = 0;
   late int gameNumber;
   late GameTimer _gameTimer;
+  int scoreGlobal = 0;
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _ImageSectionState extends State<ImageSection> {
   /// Resets the game score and the game timer.
   void _resetScore() {
     setState(() {
+      // scoreGlobal += _score;
       _score = 0;
       _gameTimer.reset();
     });
@@ -86,6 +88,7 @@ class _ImageSectionState extends State<ImageSection> {
         _gameTimer.elapsedSeconds,
         gameNumber,
         jsonList.length,
+        scoreGlobal: scoreGlobal,
         onRestart: () {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
@@ -112,7 +115,7 @@ class _ImageSectionState extends State<ImageSection> {
 
   @override
   Widget build(BuildContext context) {
-    const String appTitle = 'Ou est Charlie';
+    const String appTitle = 'Où est Charlie';
     return MaterialApp(
       title: appTitle,
       home: Scaffold(
@@ -263,6 +266,7 @@ class GameDialog {
     int totalGames, {
     required VoidCallback onRestart,
     required VoidCallback onNextLevel,
+    scoreGlobal
   }) {
     final minutes = (elapsedSeconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (elapsedSeconds % 60).toString().padLeft(2, '0');
@@ -277,13 +281,15 @@ class GameDialog {
       adjustedScore = 1000;
     }
 
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Bravo ! 🎉'),
           content: Text('Vous avez trouvé tous les personnages en $time ! \n'
-              'Votre score final est : $adjustedScore pts'),
+              'Votre score final est : $adjustedScore pts\n'
+              'Le score totale est : $scoreGlobal'),
           actions: [
             TextButton(
               onPressed: () {
