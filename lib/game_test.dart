@@ -142,48 +142,35 @@ class _ImageSectionState extends State<ImageSection> {
                 children: [
                   const Text(appTitle),
                   const SizedBox(width: 5),
-                
-                  ...(jsonList[gameNumber]["perso"] as List)
-                      .map<Widget>((element) {
-                        print(element);
-                    if (!element["found"]) {
-                      return Image.asset(
-                        'images/${element["image"]}',
-                        width: 30,
-                        height: 30,
-                      );
-                    } else {
-                      return Image.asset(
-                        'images/${element["image"]}',
-                        width: 30,
-                        height: 30,
-                        color: Colors.grey,
-                      );
-                    }
-                  }),
-
-                  // Image.asset(
-                  //   'images/waldo.jpg',
-                  //   width: 30,
-                  //   height: 30,
-                  // ),
-                  // const SizedBox(width: 0),
-                  // Image.asset(
-                  //   'images/odlaw.jpg',
-                  //   width: 30,
-                  //   height: 30,
-                  // ),
-                  // const SizedBox(width: 0),
-                  // Image.asset(
-                  //   'images/wizard.jpg',
-                  //   width: 30,
-                  //   height: 30,
-                  // ),
+                  if (jsonList.isNotEmpty && gameNumber < jsonList.length) ...[
+                    ...(jsonList[gameNumber]["perso"] as List)
+                        .map<Widget>((element) {
+                      if (!element["found"]) {
+                        return Flexible(
+                          child: Image.asset(
+                            'images/${element["image"]}',
+                            width: 30,
+                            height: 30,
+                          ),
+                        );
+                      } else {
+                        return Flexible(
+                          child: Image.asset(
+                            'images/${element["image"]}',
+                            width: 30,
+                            height: 30,
+                            color: Colors.grey,
+                          ),
+                        );
+                      }
+                    }),
+                  ] else ...[
+                    const Text('No characters found'),
+                  ],
                 ],
               ),
             ),
-            body: Expanded(
-              child: InteractiveViewer(
+            body: InteractiveViewer(
                 scaleEnabled: true,
                 panEnabled: true,
                 minScale: 0.5,
@@ -193,27 +180,28 @@ class _ImageSectionState extends State<ImageSection> {
                 child: GestureDetector(
                   onTapDown: (TapDownDetails details) {
                     final offset = details.localPosition;
-
-                    jsonList[gameNumber]["perso"].forEach((element) {
-                      if (_checkIfFound(element["coords"], offset) &&
-                          !element["found"]) {
-                        _incrementScore(context, element["name"]);
-                        element["found"] = true;
-                      }
-                    });
+                    if (jsonList.isNotEmpty && gameNumber < jsonList.length) {
+                      jsonList[gameNumber]["perso"].forEach((element) {
+                        if (_checkIfFound(element["coords"], offset) &&
+                            !element["found"]) {
+                          _incrementScore(context, element["name"]);
+                          element["found"] = true;
+                        }
+                      });
+                    }
 
                     print(
                         "Clic détecté aux coordonnées : ${offset.dx}, ${offset.dy}");
                   },
-                  child: Image.asset(
-                    'images/${jsonList[gameNumber]["image"]}',
-                    // width: 1000,
-                    // height: 1000,
-                    fit: BoxFit.cover,
-                  ),
+                  child: jsonList.isNotEmpty && gameNumber < jsonList.length
+                      ? Image.asset(
+                          'images/${jsonList[gameNumber]["image"]}',
+                          fit: BoxFit.cover,
+                        )
+                      : const SizedBox.shrink(),
                 ),
               ),
-            )));
+            ));
   }
 
   void _showMessage(BuildContext context, String message) {
@@ -229,62 +217,3 @@ class _ImageSectionState extends State<ImageSection> {
             offset.dy > (waldoCoords["y"] - 30));
   }
 }
-
-// class GameScreen extends StatefulWidget {
-//   const GameScreen({super.key});
-
-//   @override
-//   State<GameScreen> createState() => _GameScreenState();
-// }
-
-// class _GameScreenState extends State<GameScreen> {
-//   final TransformationController _viewTransformationController =
-//       TransformationController();
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     final zoomFactor = 0.61;
-//     final xTranslate = 000.0;
-//     final yTranslate = 000.0;
-
-//     // Apply initial transformation matrix values
-//     _viewTransformationController.value = Matrix4.identity()
-//       ..setEntry(0, 0, zoomFactor)
-//       ..setEntry(1, 1, zoomFactor)
-//       ..setEntry(2, 2, zoomFactor)
-//       ..setEntry(0, 3, -xTranslate)
-//       ..setEntry(1, 3, -yTranslate);
-//   }
-
-//   @override
-//   void dispose() {
-//     _viewTransformationController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         Expanded(
-//           child: InteractiveViewer(
-//             // transformationController: _viewTransformationController,
-//             scaleEnabled: true,
-//             panEnabled: true,
-//             minScale: 0.5,
-//             maxScale: 3,
-//             constrained: false, // Allow unrestricted child size
-//             boundaryMargin: EdgeInsets.zero,
-//             child: Image.asset(
-//               'images/level-1.jpg',
-//               width: 1000,
-//               height: 1000,
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
