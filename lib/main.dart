@@ -131,6 +131,7 @@ class ItemWidget extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => GameTest(
                     gameNumber: index,
+                    scoreGlobal: 0,
                   )),
         );
       },

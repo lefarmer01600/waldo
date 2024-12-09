@@ -2,27 +2,30 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:async';
+import 'main.dart';
 
 /// The `GameTest` class is a stateless widget that initializes the game with a given game number.
 /// It builds the `ImageSection` widget with the provided game number.
 
 class GameTest extends StatelessWidget {
-  const GameTest({super.key, required this.gameNumber});
+  const GameTest({super.key, required this.gameNumber, required this.scoreGlobal});
 
   final int gameNumber;
+  final int scoreGlobal;
 
   @override
   Widget build(BuildContext context) {
-    return ImageSection(gameNumber: gameNumber);
+    return ImageSection(gameNumber: gameNumber, scoreGlobal: scoreGlobal);
   }
 }
 
 /// The `ImageSection` class is a stateful widget that displays the game images and handles game logic.
 /// It initializes the game with a given game number and loads the JSON data for the game.
 class ImageSection extends StatefulWidget {
-  const ImageSection({super.key, required this.gameNumber});
+  const ImageSection({super.key, required this.gameNumber, required this.scoreGlobal});
 
   final int gameNumber;
+  final int scoreGlobal;
 
   @override
   State<ImageSection> createState() => _ImageSectionState();
@@ -35,12 +38,13 @@ class _ImageSectionState extends State<ImageSection> {
   int _score = 0;
   late int gameNumber;
   late GameTimer _gameTimer;
-  int scoreGlobal = 0;
+  late int scoreGlobal;
 
   @override
   void initState() {
     super.initState();
     gameNumber = widget.gameNumber;
+    scoreGlobal = widget.scoreGlobal;
     _loadJsonData();
     _gameTimer = GameTimer(onTick: _onTick);
     _gameTimer.start();
@@ -66,7 +70,6 @@ class _ImageSectionState extends State<ImageSection> {
   /// Resets the game score and the game timer.
   void _resetScore() {
     setState(() {
-      // scoreGlobal += _score;
       _score = 0;
       _gameTimer.reset();
     });
@@ -92,7 +95,7 @@ class _ImageSectionState extends State<ImageSection> {
         onRestart: () {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => GameTest(gameNumber: gameNumber)),
+                builder: (context) => GameTest(gameNumber: gameNumber, scoreGlobal: scoreGlobal)),
           );
           _resetScore();
           _loadJsonData();
@@ -105,9 +108,18 @@ class _ImageSectionState extends State<ImageSection> {
               _gameTimer = GameTimer(onTick: _onTick);
               _gameTimer.start();
             });
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                  builder: (context) => GameTest(gameNumber: gameNumber, scoreGlobal: scoreGlobal)),
+            );
           } else {
             _showMessage(context, 'Plus de niveaux disponibles !');
           }
+        },
+        onScoreAdjusted : (adjustedScore) {
+          setState(() {
+            scoreGlobal += adjustedScore;
+          });
         },
       );
     }
@@ -137,6 +149,17 @@ class _ImageSectionState extends State<ImageSection> {
                 ],
               ],
             ),
+            actions: [
+    IconButton(
+      icon: const Icon(Icons.home),
+      onPressed: () {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MyApp()), // Replace HomeScreen with your home screen widget
+          (Route<dynamic> route) => false,
+        );
+      },
+    ),
+  ],
           ),
           body: Stack(
             children: [
@@ -160,8 +183,8 @@ class _ImageSectionState extends State<ImageSection> {
                       });
                     }
 
-                    print(
-                        "Clic détecté aux coordonnées : ${offset.dx}, ${offset.dy}");
+                    // print(
+                    //     "Clic détecté aux coordonnées : ${offset.dx}, ${offset.dy}");
                   },
                   child: jsonList.isNotEmpty && gameNumber < jsonList.length
                       ? Image.asset(
@@ -266,6 +289,7 @@ class GameDialog {
     int totalGames, {
     required VoidCallback onRestart,
     required VoidCallback onNextLevel,
+    required Function(int) onScoreAdjusted,
     scoreGlobal
   }) {
     final minutes = (elapsedSeconds ~/ 60).toString().padLeft(2, '0');
@@ -281,6 +305,7 @@ class GameDialog {
       adjustedScore = 1000;
     }
 
+    scoreGlobal += adjustedScore;
 
     showDialog(
       context: context,
@@ -289,7 +314,7 @@ class GameDialog {
           title: const Text('Bravo ! 🎉'),
           content: Text('Vous avez trouvé tous les personnages en $time ! \n'
               'Votre score final est : $adjustedScore pts\n'
-              'Le score totale est : $scoreGlobal'),
+              'Le score totale est : $scoreGlobal pts'),
           actions: [
             TextButton(
               onPressed: () {
@@ -301,6 +326,7 @@ class GameDialog {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                onScoreAdjusted(adjustedScore);
                 onNextLevel();
               },
               child: const Text('Prochain niveau'),
