@@ -4,26 +4,22 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import 'game_test.dart';
 
-
+/// The main function is the entry point of the application.
 void main() {
   runApp(const MyApp());
 }
 
+/// MyApp is the root widget of the application.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Custom Grid Example'),
-        ),
-        body: const CustomGrid(),
-      ),
-    );
+    return const MaterialApp(home: CustomGrid());
   }
 }
 
+/// CustomGrid is a stateful widget that displays a grid of items loaded from a JSON file.
 class CustomGrid extends StatefulWidget {
   const CustomGrid({super.key});
 
@@ -31,6 +27,7 @@ class CustomGrid extends StatefulWidget {
   State<CustomGrid> createState() => _CustomGridState();
 }
 
+/// _CustomGridState is the state class for CustomGrid.
 class _CustomGridState extends State<CustomGrid> {
   List jsonList = [];
 
@@ -40,6 +37,7 @@ class _CustomGridState extends State<CustomGrid> {
     _loadJsonData();
   }
 
+  /// Loads JSON data from the assets and updates the state.
   Future<void> _loadJsonData() async {
     String jsonString = await rootBundle.loadString('assets/games.json');
     final jsonData = json.decode(jsonString);
@@ -49,29 +47,69 @@ class _CustomGridState extends State<CustomGrid> {
     });
   }
 
+  void _showRulesModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Règles du jeu'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('1. Règle 1'),
+                Text('2. Règle 2'),
+                Text('3. Règle 3'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Fermer'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 2,
-            children: List.generate(jsonList.length, (index) {
-              return Center(
-                child: ItemWidget(
-                  text: jsonList[index]['name'],
-                  image: jsonList[index]['image'],
-                  index: index,
-                ),
-              );
-            }),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Custom Grid Example'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              children: List.generate(jsonList.length, (index) {
+                return Center(
+                  child: ItemWidget(
+                    text: jsonList[index]['name'],
+                    image: jsonList[index]['image'],
+                    index: index,
+                  ),
+                );
+              }),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showRulesModal(context);
+        },
+        child: const Icon(Icons.help),
+      ),
     );
   }
 }
 
+/// ItemWidget is a stateless widget that represents an item in the grid.
 class ItemWidget extends StatelessWidget {
   const ItemWidget({
     super.key,
@@ -88,11 +126,12 @@ class ItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('Item $text clicked');
-
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => GameTest(gameNumber: index,)),
+          MaterialPageRoute(
+              builder: (context) => GameTest(
+                    gameNumber: index,
+                  )),
         );
       },
       child: Card(
