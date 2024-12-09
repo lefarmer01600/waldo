@@ -8,7 +8,8 @@ import 'main.dart';
 /// It builds the `ImageSection` widget with the provided game number.
 
 class GameTest extends StatelessWidget {
-  const GameTest({super.key, required this.gameNumber, required this.scoreGlobal});
+  const GameTest(
+      {super.key, required this.gameNumber, required this.scoreGlobal});
 
   final int gameNumber;
   final int scoreGlobal;
@@ -22,7 +23,8 @@ class GameTest extends StatelessWidget {
 /// The `ImageSection` class is a stateful widget that displays the game images and handles game logic.
 /// It initializes the game with a given game number and loads the JSON data for the game.
 class ImageSection extends StatefulWidget {
-  const ImageSection({super.key, required this.gameNumber, required this.scoreGlobal});
+  const ImageSection(
+      {super.key, required this.gameNumber, required this.scoreGlobal});
 
   final int gameNumber;
   final int scoreGlobal;
@@ -95,7 +97,8 @@ class _ImageSectionState extends State<ImageSection> {
         onRestart: () {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => GameTest(gameNumber: gameNumber, scoreGlobal: scoreGlobal)),
+                builder: (context) =>
+                    GameTest(gameNumber: gameNumber, scoreGlobal: scoreGlobal)),
           );
           _resetScore();
           _loadJsonData();
@@ -110,13 +113,14 @@ class _ImageSectionState extends State<ImageSection> {
             });
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                  builder: (context) => GameTest(gameNumber: gameNumber, scoreGlobal: scoreGlobal)),
+                  builder: (context) => GameTest(
+                      gameNumber: gameNumber, scoreGlobal: scoreGlobal)),
             );
           } else {
             _showMessage(context, 'Plus de niveaux disponibles !');
           }
         },
-        onScoreAdjusted : (adjustedScore) {
+        onScoreAdjusted: (adjustedScore) {
           setState(() {
             scoreGlobal += adjustedScore;
           });
@@ -150,16 +154,18 @@ class _ImageSectionState extends State<ImageSection> {
               ],
             ),
             actions: [
-    IconButton(
-      icon: const Icon(Icons.home),
-      onPressed: () {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const MyApp()), // Replace HomeScreen with your home screen widget
-          (Route<dynamic> route) => false,
-        );
-      },
-    ),
-  ],
+              IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const MyApp()), // Replace HomeScreen with your home screen widget
+                    (Route<dynamic> route) => false,
+                  );
+                },
+              ),
+            ],
           ),
           body: Stack(
             children: [
@@ -290,7 +296,7 @@ class GameDialog {
     required VoidCallback onRestart,
     required VoidCallback onNextLevel,
     required Function(int) onScoreAdjusted,
-    scoreGlobal
+    scoreGlobal,
   }) {
     final minutes = (elapsedSeconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (elapsedSeconds % 60).toString().padLeft(2, '0');
@@ -325,9 +331,18 @@ class GameDialog {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                onScoreAdjusted(adjustedScore);
-                onNextLevel();
+                if (gameNumber + 1 < totalGames) {
+                  Navigator.of(context).pop();
+                  onScoreAdjusted(adjustedScore);
+                  onNextLevel();
+                } else {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const MyApp()), // Replace HomeScreen with your home screen widget
+                    (Route<dynamic> route) => false,
+                  );
+                }
               },
               child: const Text('Prochain niveau'),
             ),
